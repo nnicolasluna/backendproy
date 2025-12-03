@@ -8,7 +8,8 @@ import {
     ExtractOptions,
     ScanResult,
     ExtractResult,
-    HealthCheck
+    HealthCheck,
+    Evaluacion
 } from '../models/interfaces';
 
 @Injectable({
@@ -33,5 +34,17 @@ export class ApiService {
 
     extractFiles(options: ExtractOptions = {}): Observable<ApiResponse<ExtractResult>> {
         return this.http.post<ApiResponse<ExtractResult>>(`${this.baseUrl}/extract`, options);
+    }
+
+    getEvaluations(): Observable<ApiResponse<Evaluacion[]>> {
+        return this.http.get<ApiResponse<Evaluacion[]>>(`${this.baseUrl}/evaluaciones`);
+    }
+
+    getEvaluation(id: number): Observable<ApiResponse<Evaluacion>> {
+        return this.http.get<ApiResponse<Evaluacion>>(`${this.baseUrl}/evaluaciones/${id}`);
+    }
+
+    getEvaluationPdf(id: number): Observable<Blob> {
+        return this.http.get(`${this.baseUrl}/evaluaciones/${id}/pdf`, { responseType: 'blob' });
     }
 }

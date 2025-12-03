@@ -1,0 +1,74 @@
+<div class="detail-container">
+    <div class="header">
+        <button class="btn-back" routerLink="/evaluaciones">
+            <i class="fas fa-arrow-left"></i> Volver
+        </button>
+        <h2>Detalle de Evaluación</h2>
+    </div>
+
+    <div *ngIf="loading" class="loading-state">
+        <div class="spinner"></div>
+        <p>Cargando detalles...</p>
+    </div>
+
+    <div *ngIf="error" class="error-state">
+        <p>{{ error }}</p>
+        <button routerLink="/evaluaciones">Volver a la lista</button>
+    </div>
+
+    <div *ngIf="evaluation" class="content">
+        <!-- Info General -->
+        <div class="info-card">
+            <div class="info-header">
+                <h3>Información del Dispositivo</h3>
+                <span class="date">{{ evaluation.fecha_creacion | date:'medium' }}</span>
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="label">Marca</span>
+                    <span class="value">{{ evaluation.dispositivo.marca }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Modelo</span>
+                    <span class="value">{{ evaluation.dispositivo.modelo }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Android</span>
+                    <span class="value">{{ evaluation.dispositivo.version_android }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Serial</span>
+                    <span class="value">{{ evaluation.dispositivo.serial }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Archivos -->
+        <div class="files-section">
+            <h3>Archivos Extraídos ({{ evaluation.archivos?.length || 0 }})</h3>
+
+            <div class="files-list">
+                <div *ngFor="let file of evaluation.archivos" class="file-item">
+                    <div class="file-icon">
+                        <i class="fas fa-file"></i>
+                    </div>
+                    <div class="file-details">
+                        <div class="file-name">{{ file.nombre }}</div>
+                        <div class="file-meta">
+                            <span class="size">{{ formatBytes(file.tamano) }}</span>
+                            <span class="type">{{ file.tipo }}</span>
+                            <span class="path">{{ file.ruta }}</span>
+                        </div>
+
+                        <!-- Metadata Específica -->
+                        <div *ngIf="file.metadata && (file.metadata | json) !== '{}'" class="extra-metadata">
+                            <div *ngFor="let item of file.metadata | keyvalue" class="meta-tag">
+                                <strong>{{ item.key }}:</strong> {{ item.value }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -47,3 +47,22 @@ export interface Category {
     icon: string;
     color: string;
 }
+
+export interface Archivo {
+    id: number;
+    nombre: string;
+    tipo: string;
+    tamano: number;
+    metadata: any;
+    fecha_subida: string;
+    ruta: string;
+}
+
+export interface Evaluacion {
+    id: number;
+    fecha_creacion: string;
+    dispositivo: DeviceInfo;
+    metadata: any;
+    cantidad_archivos: number;
+    archivos?: Archivo[];
+}
