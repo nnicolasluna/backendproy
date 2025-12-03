@@ -1,0 +1,55 @@
+<div class="device-card card slide-in-right">
+    <div class="card-header">
+        <h3 class="card-title">
+            <span class="material-icons">smartphone</span>
+            Dispositivo Conectado
+        </h3>
+        <button class="btn btn-outline" (click)="refresh()" [disabled]="loading">
+            <span class="material-icons" [class.spinning]="loading">refresh</span>
+        </button>
+    </div>
+
+    <div *ngIf="loading" class="loading-state">
+        <div class="spinner"></div>
+        <p>Obteniendo información del dispositivo...</p>
+    </div>
+
+    <div *ngIf="error && !loading" class="error-state">
+        <span class="material-icons error-icon">error_outline</span>
+        <p>{{ error }}</p>
+    </div>
+
+    <div *ngIf="deviceInfo && !loading" class="device-info-grid">
+        <div class="info-item">
+            <span class="material-icons info-icon">business</span>
+            <div>
+                <p class="info-label">Marca</p>
+                <p class="info-value">{{ deviceInfo.marca }}</p>
+            </div>
+        </div>
+
+        <div class="info-item">
+            <span class="material-icons info-icon">phone_android</span>
+            <div>
+                <p class="info-label">Modelo</p>
+                <p class="info-value">{{ deviceInfo.modelo }}</p>
+            </div>
+        </div>
+
+        <div class="info-item">
+            <span class="material-icons info-icon">android</span>
+            <div>
+                <p class="info-label">Android</p>
+                <p class="info-value">{{ deviceInfo.version_android }}</p>
+            </div>
+        </div>
+
+        <div class="info-item">
+            <span class="material-icons info-icon">fingerprint</span>
+            <div>
+                <p class="info-label">Serial</p>
+                <p class="info-value">{{ deviceInfo.serial }}</p>
+            </div>
+        </div>
+    </div>
+</div>

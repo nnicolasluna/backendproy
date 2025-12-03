@@ -1,0 +1,52 @@
+<div class="dashboard fade-in">
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <span class="material-icons logo-icon">phone_android</span>
+                <div>
+                    <h1 class="title">Android File Extractor</h1>
+                    <p class="subtitle">Extraccion de archivos</p>
+                </div>
+            </div>
+
+            <div class="status-section">
+                <div class="status-indicator">
+                    <span class="status-dot" [class.online]="serviceStatus === 'online'"
+                        [class.offline]="serviceStatus === 'offline'"></span>
+                    <span class="status-text">
+                        {{ serviceStatus === 'online' ? 'Servicio Conectado' : serviceStatus === 'checking' ?
+                        'Verificando...' : 'Servicio Desconectado' }}
+                    </span>
+                </div>
+                <button class="btn btn-outline" (click)="checkServiceHealth()">
+                    <span class="material-icons">refresh</span>
+                    Actualizar
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Device Info Card -->
+    <div class="device-section">
+        <app-device-info></app-device-info>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs-container">
+        <button class="tab" [class.active]="activeTab === 'scan'" (click)="setActiveTab('scan')">
+            <span class="material-icons">search</span>
+            <span>Escanear Archivos</span>
+        </button>
+        <button class="tab" [class.active]="activeTab === 'extract'" (click)="setActiveTab('extract')">
+            <span class="material-icons">download</span>
+            <span>Extraer Archivos</span>
+        </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+        <app-file-scanner *ngIf="activeTab === 'scan'"></app-file-scanner>
+        <app-file-extractor *ngIf="activeTab === 'extract'"></app-file-extractor>
+    </div>
+</div>

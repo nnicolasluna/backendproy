@@ -1,0 +1,25 @@
+# Archivos de build y paquetes
+/dist
+/out-tsc
+/node_modules
+
+# Archivos de la IDE (ejemplo: VS Code)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.vscode/*.log
+.vscode/*.seed
+
+# Archivos de depuración y logs
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# Caché del sistema operativo y de Git
+.DS_Store
+Thumbs.db
+
+# Configuración y caché de las pruebas (ejemplo: Karma)
+/coverage

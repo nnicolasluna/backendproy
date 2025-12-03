@@ -1,0 +1,134 @@
+<div class="extractor-container fade-in">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <span class="material-icons">download</span>
+                Extraer Archivos
+            </h3>
+        </div>
+
+        <!-- Category Selection -->
+        <div class="section">
+            <label class="section-label">Selecciona las categorías a extraer:</label>
+            <div class="categories-grid">
+                <div *ngFor="let category of categories" class="chip category-chip"
+                    [class.active]="isCategorySelected(category.id)" (click)="toggleCategory(category.id)"
+                    [style.--chip-color]="category.color">
+                    <span class="material-icons">{{ category.icon }}</span>
+                    <span>{{ category.name }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Destination Folder -->
+        <div class="section">
+            <label class="input-label">Carpeta de destino:</label>
+            <input type="text" class="input" [(ngModel)]="destinationFolder" placeholder="archivos_descargados">
+            <p class="input-hint">
+                <span class="material-icons">info</span>
+                Los archivos se guardarán en esta carpeta dentro del directorio del servidor
+            </p>
+        </div>
+
+        <!-- Custom Path -->
+        <div class="section">
+            <label class="input-label">Ruta personalizada (opcional):</label>
+            <input type="text" class="input" [(ngModel)]="customPath" placeholder="/storage/emulated/0/DCIM/">
+        </div>
+
+        <!-- Extract Button -->
+        <button class="btn btn-success extract-btn" (click)="extract()"
+            [disabled]="loading || (!selectedCategories.length && !customPath)">
+            <span class="material-icons">{{ loading ? 'downloading' : 'download' }}</span>
+            {{ loading ? 'Extrayendo...' : 'Iniciar Extracción' }}
+        </button>
+
+        <!-- Progress Bar -->
+        <div *ngIf="loading" class="progress-section">
+            <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="progress"></div>
+            </div>
+            <p class="progress-text">{{ progress }}% completado</p>
+        </div>
+
+        <!-- Error State -->
+        <div *ngIf="error" class="error-message">
+            <span class="material-icons">error</span>
+            <span>{{ error }}</span>
+        </div>
+    </div>
+
+    <!-- Results -->
+    <div *ngIf="extractResult" class="results-container">
+        <div class="card success-card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <span class="material-icons">check_circle</span>
+                    Extracción Completada
+                </h3>
+            </div>
+
+            <!-- Success Rate -->
+            <div class="success-rate">
+                <div class="circular-progress" [style.--progress]="getSuccessRate()">
+                    <svg width="120" height="120">
+                        <circle cx="60" cy="60" r="54" class="bg-circle"></circle>
+                        <circle cx="60" cy="60" r="54" class="progress-circle"
+                            [style.stroke-dashoffset]="339.292 - (339.292 * getSuccessRate() / 100)"></circle>
+                    </svg>
+                    <div class="progress-value">{{ getSuccessRate() }}%</div>
+                </div>
+                <p class="success-text">Tasa de Éxito</p>
+            </div>
+
+            <!-- Statistics Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="material-icons stat-icon" style="color: #06b6d4;">scanner</span>
+                    <div>
+                        <p class="stat-label">Escaneados</p>
+                        <p class="stat-value">{{ extractResult.archivos_escaneados }}</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <span class="material-icons stat-icon" style="color: #10b981;">download_done</span>
+                    <div>
+                        <p class="stat-label">Descargados</p>
+                        <p class="stat-value">{{ extractResult.archivos_descargados }}</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <span class="material-icons stat-icon" style="color: #ef4444;">error</span>
+                    <div>
+                        <p class="stat-label">Fallidos</p>
+                        <p class="stat-value">{{ extractResult.archivos_fallidos }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categories Breakdown -->
+            <div class="categories-breakdown">
+                <h4 class="breakdown-title">Archivos por Categoría:</h4>
+                <div class="breakdown-grid">
+                    <div *ngFor="let item of getResultEntries()" class="breakdown-item"
+                        [style.--item-color]="item.color">
+                        <span class="material-icons">{{ item.icon }}</span>
+                        <span class="breakdown-name">{{ item.category | titlecase }}</span>
+                        <span class="breakdown-count">{{ item.count }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Destination Info -->
+            <div class="destination-info">
+                <span class="material-icons">folder_open</span>
+                <div>
+                    <p class="destination-label">Ubicación:</p>
+                    <p class="destination-path">{{ extractResult.carpeta_destino }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

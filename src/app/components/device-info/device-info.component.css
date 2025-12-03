@@ -1,0 +1,73 @@
+.device-card {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
+}
+
+.loading-state,
+.error-state {
+    text-align: center;
+    padding: 2rem;
+}
+
+.loading-state p,
+.error-state p {
+    margin-top: 1rem;
+    color: var(--text-secondary);
+}
+
+.error-state {
+    color: var(--error);
+}
+
+.error-icon {
+    font-size: 3rem;
+    color: var(--error);
+}
+
+.device-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-normal);
+}
+
+.info-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+}
+
+.info-icon {
+    font-size: 2rem;
+    color: var(--primary);
+}
+
+.info-label {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.info-value {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0.25rem 0 0;
+}
+
+.spinning {
+    animation: spin 1s linear infinite;
+}
+
+@media (max-width: 768px) {
+    .device-info-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,37 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import {
+    ApiResponse,
+    DeviceInfo,
+    ScanOptions,
+    ExtractOptions,
+    ScanResult,
+    ExtractResult,
+    HealthCheck
+} from '../models/interfaces';
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ApiService {
+    private baseUrl = 'http://localhost:5000/api';
+
+    constructor(private http: HttpClient) { }
+
+    healthCheck(): Observable<HealthCheck> {
+        return this.http.get<HealthCheck>(`${this.baseUrl}/health`);
+    }
+
+    getDeviceInfo(): Observable<ApiResponse<DeviceInfo>> {
+        return this.http.get<ApiResponse<DeviceInfo>>(`${this.baseUrl}/device-info`);
+    }
+
+    scanFiles(options: ScanOptions = {}): Observable<ApiResponse<ScanResult>> {
+        return this.http.post<ApiResponse<ScanResult>>(`${this.baseUrl}/scan`, options);
+    }
+
+    extractFiles(options: ExtractOptions = {}): Observable<ApiResponse<ExtractResult>> {
+        return this.http.post<ApiResponse<ExtractResult>>(`${this.baseUrl}/extract`, options);
+    }
+}

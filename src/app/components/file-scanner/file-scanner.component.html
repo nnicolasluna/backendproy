@@ -1,0 +1,99 @@
+<div class="scanner-container fade-in">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <span class="material-icons">search</span>
+                Escanear Archivos
+            </h3>
+        </div>
+
+        <!-- Category Selection -->
+        <div class="section">
+            <label class="section-label">Selecciona las categorías a escanear:</label>
+            <div class="categories-grid">
+                <div *ngFor="let category of categories" class="chip category-chip"
+                    [class.active]="isCategorySelected(category.id)" (click)="toggleCategory(category.id)"
+                    [style.--chip-color]="category.color">
+                    <span class="material-icons">{{ category.icon }}</span>
+                    <span>{{ category.name }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom Path -->
+        <div class="section">
+            <label class="input-label">Ruta personalizada (opcional):</label>
+            <input type="text" class="input" [(ngModel)]="customPath" placeholder="/storage/emulated/0/DCIM/">
+        </div>
+
+        <!-- Scan Button -->
+        <button class="btn btn-primary scan-btn" (click)="scan()"
+            [disabled]="loading || (!selectedCategories.length && !customPath)">
+            <span class="material-icons">{{ loading ? 'hourglass_empty' : 'search' }}</span>
+            {{ loading ? 'Escaneando...' : 'Iniciar Escaneo' }}
+        </button>
+
+        <!-- Error State -->
+        <div *ngIf="error" class="error-message">
+            <span class="material-icons">error</span>
+            <span>{{ error }}</span>
+        </div>
+    </div>
+
+    <!-- Results -->
+    <div *ngIf="scanResult" class="results-container">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <span class="material-icons">analytics</span>
+                    Resultados del Escaneo
+                </h3>
+            </div>
+
+            <!-- Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card total-stat">
+                    <span class="material-icons stat-icon">folder_open</span>
+                    <div>
+                        <p class="stat-label">Total de Archivos</p>
+                        <p class="stat-value">{{ scanResult.total_archivos }}</p>
+                    </div>
+                </div>
+
+                <div *ngFor="let item of getResultEntries()" class="stat-card" [style.--stat-color]="item.color">
+                    <span class="material-icons stat-icon">{{ item.icon }}</span>
+                    <div>
+                        <p class="stat-label">{{ item.category | titlecase }}</p>
+                        <p class="stat-value">{{ item.count }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File List Toggle -->
+            <button class="btn btn-secondary mt-3" (click)="toggleFileList()">
+                <span class="material-icons">{{ showFileList ? 'expand_less' : 'expand_more' }}</span>
+                {{ showFileList ? 'Ocultar' : 'Ver' }} Lista de Archivos ({{ scanResult.archivos.length }})
+            </button>
+
+            <!-- File List -->
+            <div *ngIf="showFileList" class="file-list">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Ruta del Archivo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let file of scanResult.archivos; let i = index">
+                                <td>{{ i + 1 }}</td>
+                                <td class="file-path">{{ file }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
