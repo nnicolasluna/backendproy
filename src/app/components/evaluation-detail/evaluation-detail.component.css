@@ -97,7 +97,8 @@ h2 {
     padding: 1rem;
     display: flex;
     gap: 1rem;
-    transition: background 0.3s ease;
+    transition: all 0.3s ease;
+    align-items: flex-start;
 }
 
 .file-item:hover {
@@ -113,19 +114,23 @@ h2 {
     align-items: center;
     justify-content: center;
     color: #2196F3;
+    flex-shrink: 0;
 }
 
 .file-details {
     flex: 1;
+    min-width: 0;
 }
 
 .file-name {
     font-weight: 500;
     margin-bottom: 0.3rem;
+    word-break: break-word;
 }
 
 .file-meta {
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
     font-size: 0.85rem;
     color: rgba(255, 255, 255, 0.6);
@@ -167,5 +172,303 @@ h2 {
 @keyframes spin {
     to {
         transform: rotate(360deg);
+    }
+}
+
+/* Clickable file items */
+.file-item.clickable {
+    cursor: pointer;
+}
+
+.file-item.clickable:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateX(4px);
+}
+
+.file-item.clickable:hover .preview-indicator {
+    opacity: 1;
+}
+
+.preview-indicator {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 0.5rem;
+    flex-shrink: 0;
+}
+
+/* File icon colors by type */
+.file-icon.image {
+    background: rgba(233, 30, 99, 0.2);
+    color: #E91E63;
+}
+
+.file-icon.audio {
+    background: rgba(156, 39, 176, 0.2);
+    color: #9C27B0;
+}
+
+.file-icon.video {
+    background: rgba(244, 67, 54, 0.2);
+    color: #F44336;
+}
+
+.file-icon.document {
+    background: rgba(255, 87, 34, 0.2);
+    color: #FF5722;
+}
+
+/* Preview Modal */
+.preview-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-content {
+    background: rgba(30, 30, 40, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.3s ease;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+.modal-header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-header h3 {
+    margin: 0 0 0.5rem 0;
+    color: white;
+    font-size: 1.2rem;
+    word-break: break-all;
+    padding-right: 2rem;
+}
+
+.modal-file-info {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.85rem;
+}
+
+.modal-body {
+    flex: 1;
+    overflow: auto;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Image Preview */
+.preview-image {
+    max-width: 100%;
+    max-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-image img {
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Audio Preview */
+.preview-audio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+    max-width: 500px;
+}
+
+.audio-icon {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #9C27B0, #673AB7);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: white;
+    box-shadow: 0 10px 40px rgba(156, 39, 176, 0.3);
+    animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.preview-audio audio {
+    width: 100%;
+    height: 50px;
+    border-radius: 25px;
+}
+
+/* Video Preview */
+.preview-video {
+    width: 100%;
+    max-width: 800px;
+}
+
+.preview-video video {
+    width: 100%;
+    max-height: 60vh;
+    border-radius: 12px;
+    background: black;
+}
+
+/* Document Preview */
+.preview-document {
+    width: 100%;
+    height: 70vh;
+}
+
+.preview-document iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 8px;
+    background: white;
+}
+
+/* Other Files */
+.preview-other {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    text-align: center;
+}
+
+.other-icon {
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.preview-other p {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+}
+
+.btn-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    background: linear-gradient(135deg, #2196F3, #1976D2);
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-download:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(33, 150, 243, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        max-height: 95vh;
+        border-radius: 16px;
+    }
+
+    .modal-header {
+        padding: 1rem 1.5rem;
+    }
+
+    .modal-body {
+        padding: 1rem;
+    }
+
+    .modal-header h3 {
+        font-size: 1rem;
     }
 }

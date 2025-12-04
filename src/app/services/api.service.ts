@@ -53,5 +53,9 @@ export class ApiService {
     getEvaluationPdf(id: number): Observable<Blob> {
         return this.http.get(`${this.baseUrl}/evaluaciones/${id}/pdf`, { responseType: 'blob' });
     }
+
+    getFileUrl(fileId: number): string {
+        return `${this.baseUrl}/files/${fileId}`;
+    }
 }
 

@@ -48,9 +48,9 @@
             <h3>Archivos Extraídos ({{ evaluation.archivos?.length || 0 }})</h3>
 
             <div class="files-list">
-                <div *ngFor="let file of evaluation.archivos" class="file-item">
-                    <div class="file-icon">
-                        <i class="fas fa-file"></i>
+                <div *ngFor="let file of evaluation.archivos" class="file-item clickable" (click)="openPreview(file)">
+                    <div class="file-icon" [ngClass]="getFileType(file)">
+                        <i class="fas" [ngClass]="getFileIcon(file)"></i>
                     </div>
                     <div class="file-details">
                         <div class="file-name">{{ file.nombre }}</div>
@@ -67,7 +67,64 @@
                             </div>
                         </div>
                     </div>
+                    <div class="preview-indicator">
+                        <i class="fas fa-eye"></i>
+                    </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Preview Modal -->
+<div *ngIf="isModalOpen && selectedFile" class="preview-modal" (click)="onModalBackdropClick($event)">
+    <div class="modal-content">
+        <button class="modal-close" (click)="closePreview()">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <div class="modal-header">
+            <h3>{{ selectedFile.nombre }}</h3>
+            <span class="modal-file-info">{{ formatBytes(selectedFile.tamano) }} • {{ selectedFile.tipo }}</span>
+        </div>
+
+        <div class="modal-body">
+            <!-- Image Preview -->
+            <div *ngIf="getFileType(selectedFile) === 'image'" class="preview-image">
+                <img [src]="getFileUrl(selectedFile.id)" [alt]="selectedFile.nombre" />
+            </div>
+
+            <!-- Audio Preview -->
+            <div *ngIf="getFileType(selectedFile) === 'audio'" class="preview-audio">
+                <div class="audio-icon">
+                    <i class="fas fa-music"></i>
+                </div>
+                <audio controls [src]="getFileUrl(selectedFile.id)">
+                    Tu navegador no soporta el elemento de audio.
+                </audio>
+            </div>
+
+            <!-- Video Preview -->
+            <div *ngIf="getFileType(selectedFile) === 'video'" class="preview-video">
+                <video controls [src]="getFileUrl(selectedFile.id)">
+                    Tu navegador no soporta el elemento de video.
+                </video>
+            </div>
+
+            <!-- PDF/Document Preview -->
+            <div *ngIf="getFileType(selectedFile) === 'document'" class="preview-document">
+                <iframe [src]="getFileUrl(selectedFile.id)" type="application/pdf"></iframe>
+            </div>
+
+            <!-- Other Files -->
+            <div *ngIf="getFileType(selectedFile) === 'other'" class="preview-other">
+                <div class="other-icon">
+                    <i class="fas fa-file"></i>
+                </div>
+                <p>Este tipo de archivo no se puede previsualizar</p>
+                <a [href]="getFileUrl(selectedFile.id)" download class="btn-download">
+                    <i class="fas fa-download"></i> Descargar Archivo
+                </a>
             </div>
         </div>
     </div>
