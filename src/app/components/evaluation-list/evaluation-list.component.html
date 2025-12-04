@@ -33,7 +33,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let eval of evaluations" [routerLink]="['/evaluaciones', eval.id]" class="table-row">
+                <tr *ngFor="let eval of paginatedEvaluations" [routerLink]="['/evaluaciones', eval.id]"
+                    class="table-row">
                     <td><span class="id-badge">#{{ eval.id }}</span></td>
                     <td>{{ eval.fecha_creacion | date:'medium' }}</td>
                     <td>
@@ -46,18 +47,31 @@
                         <span class="file-count">{{ eval.cantidad_archivos }} archivos</span>
                     </td>
                     <td class="actions-cell">
+                        <button class="btn-icon btn-calls" [routerLink]="['/evaluaciones', eval.id, 'llamadas']"
+                            (click)="$event.stopPropagation()" title="Ver Llamadas">
+                            <span class="material-icons">phone</span>
+                        </button>
                         <button class="btn-icon btn-pdf" (click)="$event.stopPropagation(); viewPdf(eval.id)"
                             title="Ver PDF">
                             PDF
-                            <i class="fas fa-file-pdf"></i>
                         </button>
                         <button class="btn-icon btn-view" [routerLink]="['/evaluaciones', eval.id]"
                             title="Ver Detalles">Ver
-                            <i class="fas fa-eye"></i>
                         </button>
                     </td>
                 </tr>
             </tbody>
         </table>
+
+        <!-- Pagination -->
+        <div class="pagination" *ngIf="totalPages > 1">
+            <button class="btn-page" (click)="prevPage()" [disabled]="currentPage === 1">
+                <span class="material-icons">chevron_left</span>
+            </button>
+            <span class="page-info">Página {{ currentPage }} de {{ totalPages }}</span>
+            <button class="btn-page" (click)="nextPage()" [disabled]="currentPage === totalPages">
+                <span class="material-icons">chevron_right</span>
+            </button>
+        </div>
     </div>
 </div>

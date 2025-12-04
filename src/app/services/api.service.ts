@@ -9,7 +9,9 @@ import {
     ScanResult,
     ExtractResult,
     HealthCheck,
-    Evaluacion
+    Evaluacion,
+    ExtractCallsResult,
+    Llamada
 } from '../models/interfaces';
 
 @Injectable({
@@ -36,6 +38,10 @@ export class ApiService {
         return this.http.post<ApiResponse<ExtractResult>>(`${this.baseUrl}/extract`, options);
     }
 
+    extractCalls(metadata: any = {}): Observable<ApiResponse<ExtractCallsResult>> {
+        return this.http.post<ApiResponse<ExtractCallsResult>>(`${this.baseUrl}/extract-calls`, { metadata });
+    }
+
     getEvaluations(): Observable<ApiResponse<Evaluacion[]>> {
         return this.http.get<ApiResponse<Evaluacion[]>>(`${this.baseUrl}/evaluaciones`);
     }
@@ -48,3 +54,4 @@ export class ApiService {
         return this.http.get(`${this.baseUrl}/evaluaciones/${id}/pdf`, { responseType: 'blob' });
     }
 }
+

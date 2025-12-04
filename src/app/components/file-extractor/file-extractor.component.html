@@ -7,8 +7,23 @@
             </h3>
         </div>
 
-        <!-- Category Selection -->
+        <!-- Extract Only Calls Toggle -->
         <div class="section">
+            <div class="toggle-container" (click)="toggleExtractOnlyCalls()">
+                <div class="toggle-switch" [class.active]="extractOnlyCalls">
+                    <div class="toggle-slider"></div>
+                </div>
+                <div class="toggle-info">
+                    <span class="toggle-label">Solo Extraer Llamadas</span>
+                    <span class="toggle-hint">Extrae únicamente el registro de llamadas sin descargar archivos</span>
+                </div>
+                <span class="material-icons toggle-icon"
+                    [style.color]="extractOnlyCalls ? '#8b5cf6' : '#6b7280'">phone</span>
+            </div>
+        </div>
+
+        <!-- Category Selection (hidden when extractOnlyCalls is true) -->
+        <div class="section" *ngIf="!extractOnlyCalls">
             <label class="section-label">Selecciona las categorías a extraer:</label>
             <div class="categories-grid">
                 <div *ngFor="let category of categories" class="chip category-chip"
@@ -20,8 +35,8 @@
             </div>
         </div>
 
-        <!-- Destination Folder -->
-        <div class="section">
+        <!-- Destination Folder (hidden when extractOnlyCalls is true) -->
+        <div class="section" *ngIf="!extractOnlyCalls">
             <label class="input-label">Carpeta de destino:</label>
             <input type="text" class="input" [(ngModel)]="destinationFolder" placeholder="archivos_descargados">
             <p class="input-hint">
@@ -30,17 +45,19 @@
             </p>
         </div>
 
-        <!-- Custom Path -->
-        <div class="section">
+        <!-- Custom Path (hidden when extractOnlyCalls is true) -->
+        <div class="section" *ngIf="!extractOnlyCalls">
             <label class="input-label">Ruta personalizada (opcional):</label>
             <input type="text" class="input" [(ngModel)]="customPath" placeholder="/storage/emulated/0/DCIM/">
         </div>
 
         <!-- Extract Button -->
-        <button class="btn btn-success extract-btn" (click)="extract()"
-            [disabled]="loading || (!selectedCategories.length && !customPath)">
-            <span class="material-icons">{{ loading ? 'downloading' : 'download' }}</span>
-            {{ loading ? 'Extrayendo...' : 'Iniciar Extracción' }}
+        <button class="btn btn-success extract-btn" (click)="extract()" [disabled]="loading || !canExtract()"
+            [class.btn-calls-mode]="extractOnlyCalls">
+            <span class="material-icons">{{ loading ? 'downloading' : (extractOnlyCalls ? 'phone' : 'download')
+                }}</span>
+            {{ loading ? (extractOnlyCalls ? 'Extrayendo Llamadas...' : 'Extrayendo...') : (extractOnlyCalls ? 'Extraer
+            Llamadas' : 'Iniciar Extracción') }}
         </button>
 
         <!-- Progress Bar -->
@@ -58,7 +75,7 @@
         </div>
     </div>
 
-    <!-- Results -->
+    <!-- Results for Files -->
     <div *ngIf="extractResult" class="results-container">
         <div class="card success-card">
             <div class="card-header">
@@ -129,6 +146,53 @@
                     <p class="destination-path">{{ extractResult.carpeta_destino }}</p>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Results for Calls -->
+    <div *ngIf="extractCallsResult" class="results-container">
+        <div class="card success-card calls-result-card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <span class="material-icons">check_circle</span>
+                    Llamadas Extraídas
+                </h3>
+            </div>
+
+            <!-- Calls Summary -->
+            <div class="calls-summary">
+                <div class="calls-icon-container">
+                    <span class="material-icons">phone_in_talk</span>
+                </div>
+                <div class="calls-count">{{ extractCallsResult.llamadas_extraidas }}</div>
+                <p class="calls-label">Llamadas encontradas</p>
+            </div>
+
+            <!-- Evaluation Info -->
+            <div class="evaluation-info">
+                <span class="material-icons">assignment</span>
+                <div>
+                    <p class="evaluation-label">Evaluación creada:</p>
+                    <p class="evaluation-id">#{{ extractCallsResult.evaluacion.id }}</p>
+                </div>
+            </div>
+
+            <!-- Device Info -->
+            <div class="device-info-card">
+                <span class="material-icons">smartphone</span>
+                <div>
+                    <p class="device-label">Dispositivo:</p>
+                    <p class="device-value">{{ extractCallsResult.evaluacion.dispositivo.marca }} {{
+                        extractCallsResult.evaluacion.dispositivo.modelo }}</p>
+                </div>
+            </div>
+
+            <!-- View Calls Button -->
+            <a class="btn btn-view-calls"
+                [routerLink]="['/evaluaciones', extractCallsResult.evaluacion.id, 'llamadas']">
+                <span class="material-icons">visibility</span>
+                Ver Llamadas Extraídas
+            </a>
         </div>
     </div>
 </div>

@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
-import { Category, ExtractResult } from '../../models/interfaces';
+import { Category, ExtractResult, ExtractCallsResult } from '../../models/interfaces';
 
 @Component({
     selector: 'app-file-extractor',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, RouterModule],
     templateUrl: './file-extractor.component.html',
     styleUrls: ['./file-extractor.component.css']
 })
@@ -25,8 +26,12 @@ export class FileExtractorComponent {
     customPath = '';
     loading = false;
     extractResult: ExtractResult | null = null;
+    extractCallsResult: ExtractCallsResult | null = null;
     error: string | null = null;
     progress = 0;
+
+    // Opción para extraer solo llamadas
+    extractOnlyCalls = false;
 
     constructor(private apiService: ApiService) { }
 
@@ -43,7 +48,21 @@ export class FileExtractorComponent {
         return this.selectedCategories.includes(categoryId);
     }
 
+    toggleExtractOnlyCalls() {
+        this.extractOnlyCalls = !this.extractOnlyCalls;
+        if (this.extractOnlyCalls) {
+            // Limpiar selecciones de categorías al activar solo llamadas
+            this.selectedCategories = [];
+        }
+    }
+
     extract() {
+        // Si es solo llamadas, ejecutar extracción de llamadas
+        if (this.extractOnlyCalls) {
+            this.extractCalls();
+            return;
+        }
+
         if (!this.selectedCategories.length && !this.customPath) {
             return;
         }
@@ -51,6 +70,7 @@ export class FileExtractorComponent {
         this.loading = true;
         this.error = null;
         this.extractResult = null;
+        this.extractCallsResult = null;
         this.progress = 0;
 
         // Simulate progress (real progress would require WebSocket from backend)
@@ -93,6 +113,41 @@ export class FileExtractorComponent {
         });
     }
 
+    extractCalls() {
+        this.loading = true;
+        this.error = null;
+        this.extractResult = null;
+        this.extractCallsResult = null;
+        this.progress = 0;
+
+        const progressInterval = setInterval(() => {
+            if (this.progress < 90) {
+                this.progress += 15;
+            }
+        }, 300);
+
+        this.apiService.extractCalls().subscribe({
+            next: (response) => {
+                clearInterval(progressInterval);
+                this.progress = 100;
+
+                if (response.success && response.data) {
+                    this.extractCallsResult = response.data;
+                }
+
+                setTimeout(() => {
+                    this.loading = false;
+                }, 500);
+            },
+            error: (error) => {
+                clearInterval(progressInterval);
+                this.error = 'Error al extraer llamadas. Verifica la conexión con el dispositivo.';
+                this.loading = false;
+                this.progress = 0;
+            }
+        });
+    }
+
     getCategoryColor(categoryId: string): string {
         const category = this.categories.find(c => c.id === categoryId);
         return category ? category.color : '#8b5cf6';
@@ -118,4 +173,10 @@ export class FileExtractorComponent {
         if (!this.extractResult || this.extractResult.archivos_escaneados === 0) return 0;
         return Math.round((this.extractResult.archivos_descargados / this.extractResult.archivos_escaneados) * 100);
     }
+
+    canExtract(): boolean {
+        if (this.extractOnlyCalls) return true;
+        return this.selectedCategories.length > 0 || !!this.customPath;
+    }
 }
+

@@ -66,6 +66,16 @@ export interface Archivo {
     ruta: string;
 }
 
+export interface Llamada {
+    id: number;
+    numero: string;
+    nombre_contacto: string | null;
+    fecha: string;
+    duracion_segundos: number;
+    tipo: string;
+    metadata_llamada: any;
+}
+
 export interface Evaluacion {
     id: number;
     fecha_creacion: string;
@@ -73,4 +83,11 @@ export interface Evaluacion {
     metadata: any;
     cantidad_archivos: number;
     archivos?: Archivo[];
+    llamadas?: Llamada[];
+}
+
+export interface ExtractCallsResult {
+    evaluacion: Evaluacion;
+    llamadas_extraidas: number;
+    llamadas: Llamada[];
 }

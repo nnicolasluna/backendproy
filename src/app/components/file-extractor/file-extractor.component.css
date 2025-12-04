@@ -262,3 +262,183 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* Toggle Switch for Extract Only Calls */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.toggle-container:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(139, 92, 246, 0.3);
+}
+
+.toggle-switch {
+    position: relative;
+    width: 50px;
+    height: 26px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 13px;
+    transition: all 0.3s ease;
+}
+
+.toggle-switch.active {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch.active .toggle-slider {
+    left: 27px;
+}
+
+.toggle-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.toggle-label {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.toggle-hint {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.toggle-icon {
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+/* Button calls mode */
+.btn-calls-mode {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%) !important;
+}
+
+.btn-calls-mode:hover {
+    background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%) !important;
+}
+
+/* Calls Result Card */
+.calls-result-card {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%) !important;
+}
+
+.calls-summary {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.calls-icon-container {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(99, 102, 241, 0.1) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calls-icon-container .material-icons {
+    font-size: 2.5rem;
+    color: #8b5cf6;
+}
+
+.calls-count {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #8b5cf6;
+    line-height: 1;
+}
+
+.calls-label {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+}
+
+.evaluation-info,
+.device-info-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
+}
+
+.evaluation-info .material-icons,
+.device-info-card .material-icons {
+    font-size: 1.5rem;
+    color: #8b5cf6;
+}
+
+.evaluation-label,
+.device-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.evaluation-id {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #8b5cf6;
+    margin: 0.25rem 0 0;
+}
+
+.device-value {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin: 0.25rem 0 0;
+}
+
+.btn-view-calls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    border: none;
+    border-radius: var(--radius-md);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-view-calls:hover {
+    background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+}

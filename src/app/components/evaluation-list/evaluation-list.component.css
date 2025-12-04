@@ -120,6 +120,7 @@
     cursor: pointer;
     transition: all 0.2s ease;
     background: transparent;
+    font-size: 0.8rem;
 }
 
 .btn-pdf {
@@ -140,6 +141,20 @@
 .btn-view:hover {
     background: rgba(33, 150, 243, 0.2);
     transform: translateY(-2px);
+}
+
+.btn-calls {
+    color: #8b5cf6;
+    background: rgba(139, 92, 246, 0.1);
+}
+
+.btn-calls:hover {
+    background: rgba(139, 92, 246, 0.2);
+    transform: translateY(-2px);
+}
+
+.btn-calls .material-icons {
+    font-size: 1.1rem;
 }
 
 .loading-state,
@@ -164,4 +179,42 @@
     to {
         transform: rotate(360deg);
     }
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-page {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-page:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-page:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-info {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
 }

@@ -1,0 +1,115 @@
+<div class="calls-container">
+    <div class="header">
+        <div class="header-left">
+            <button class="btn-back" (click)="goBack()">
+                <span class="material-icons">arrow_back</span>
+                Volver
+            </button>
+            <h2>Registro de Llamadas</h2>
+            <span class="evaluation-badge">Evaluación #{{ evaluacionId }}</span>
+        </div>
+        <button class="btn-refresh" (click)="loadCalls()">
+            <span class="material-icons">sync</span>
+            Actualizar
+        </button>
+    </div>
+
+    <div *ngIf="loading" class="loading-state">
+        <div class="spinner"></div>
+        <p>Cargando llamadas...</p>
+    </div>
+
+    <div *ngIf="error" class="error-state">
+        <span class="material-icons">error</span>
+        <p>{{ error }}</p>
+        <button (click)="loadCalls()">Reintentar</button>
+    </div>
+
+    <div *ngIf="!loading && !error" class="content">
+        <!-- Summary Cards -->
+        <div class="summary-cards" *ngIf="llamadas.length > 0">
+            <div class="summary-card">
+                <span class="material-icons" style="color: #10b981;">call_received</span>
+                <div class="summary-info">
+                    <span class="summary-value">{{ getCallSummary().entrantes }}</span>
+                    <span class="summary-label">Entrantes</span>
+                </div>
+            </div>
+            <div class="summary-card">
+                <span class="material-icons" style="color: #3b82f6;">call_made</span>
+                <div class="summary-info">
+                    <span class="summary-value">{{ getCallSummary().salientes }}</span>
+                    <span class="summary-label">Salientes</span>
+                </div>
+            </div>
+            <div class="summary-card">
+                <span class="material-icons" style="color: #ef4444;">call_missed</span>
+                <div class="summary-info">
+                    <span class="summary-value">{{ getCallSummary().perdidas }}</span>
+                    <span class="summary-label">Perdidas</span>
+                </div>
+            </div>
+            <div class="summary-card">
+                <span class="material-icons" style="color: #8b5cf6;">schedule</span>
+                <div class="summary-info">
+                    <span class="summary-value">{{ formatDuration(getCallSummary().duracionTotal) }}</span>
+                    <span class="summary-label">Duración Total</span>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="llamadas.length === 0" class="empty-state">
+            <span class="material-icons">phone_disabled</span>
+            <p>No hay llamadas registradas en esta evaluación.</p>
+        </div>
+
+        <div *ngIf="llamadas.length > 0" class="table-container">
+            <table class="calls-table">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Número</th>
+                        <th>Contacto</th>
+                        <th>Fecha</th>
+                        <th>Duración</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let call of paginatedCalls" class="table-row">
+                        <td>
+                            <div class="call-type" [style.--type-color]="getCallTypeColor(call.tipo)">
+                                <span class="material-icons">{{ getCallTypeIcon(call.tipo) }}</span>
+                                <span class="type-label">{{ getCallTypeLabel(call.tipo) }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="phone-number">{{ call.numero || 'Desconocido' }}</span>
+                        </td>
+                        <td>
+                            <span class="contact-name">{{ call.nombre_contacto || '-' }}</span>
+                        </td>
+                        <td>{{ call.fecha | date:'medium' }}</td>
+                        <td>
+                            <span class="duration-badge">{{ formatDuration(call.duracion_segundos) }}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <div class="pagination" *ngIf="totalPages > 1">
+                <button class="btn-page" (click)="prevPage()" [disabled]="currentPage === 1">
+                    <span class="material-icons">chevron_left</span>
+                </button>
+                <span class="page-info">Página {{ currentPage }} de {{ totalPages }}</span>
+                <button class="btn-page" (click)="nextPage()" [disabled]="currentPage === totalPages">
+                    <span class="material-icons">chevron_right</span>
+                </button>
+            </div>
+
+            <div class="total-info">
+                <span>Total: {{ llamadas.length }} llamadas</span>
+            </div>
+        </div>
+    </div>
+</div>
