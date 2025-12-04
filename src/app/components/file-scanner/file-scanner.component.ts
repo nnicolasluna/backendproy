@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { StateService } from '../../services/state.service';
-import { Category, ScanResult } from '../../models/interfaces';
+import { Category, ScanResult, ScanFile } from '../../models/interfaces';
 
 @Component({
     selector: 'app-file-scanner',
@@ -101,5 +101,40 @@ export class FileScannerComponent {
             color: this.getCategoryColor(cat),
             icon: this.getCategoryIcon(cat)
         }));
+    }
+
+    // Pagination
+    currentPage = 1;
+    itemsPerPage = 10;
+
+    get paginatedFiles(): ScanFile[] {
+        if (!this.scanResult || !this.scanResult.archivos) return [];
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        return this.scanResult.archivos.slice(startIndex, startIndex + this.itemsPerPage);
+    }
+
+    get totalPages(): number {
+        if (!this.scanResult || !this.scanResult.archivos) return 0;
+        return Math.ceil(this.scanResult.archivos.length / this.itemsPerPage);
+    }
+
+    nextPage() {
+        if (this.currentPage < this.totalPages) {
+            this.currentPage++;
+        }
+    }
+
+    prevPage() {
+        if (this.currentPage > 1) {
+            this.currentPage--;
+        }
+    }
+
+    formatSize(bytes: number): string {
+        if (bytes === 0) return '0 B';
+        const k = 1024;
+        const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 }

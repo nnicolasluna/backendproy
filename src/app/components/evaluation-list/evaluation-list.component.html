@@ -16,69 +16,48 @@
         <button (click)="loadEvaluations()">Reintentar</button>
     </div>
 
-    <div *ngIf="!loading && !error" class="evaluations-grid">
+    <div *ngIf="!loading && !error" class="table-container">
         <div *ngIf="evaluations.length === 0" class="empty-state">
             <p>No hay evaluaciones registradas.</p>
         </div>
 
-        <div *ngFor="let eval of evaluations" class="evaluation-card" [routerLink]="['/evaluaciones', eval.id]">
-            <div class="card-header">
-                <span class="date">{{ eval.fecha_creacion | date:'medium' }}</span>
-                <span class="id">#{{ eval.id }}</span>
-            </div>
-            <div class="card-body">
-                <div class="device-info">
-                    <h3>{{ eval.dispositivo.marca }} {{ eval.dispositivo.modelo }}</h3>
-                    <p>Android {{ eval.dispositivo.version_android }}</p>
-                </div>
-                <div class="stats">
-                    <div class="evaluations-container">
-                        <div class="header">
-                            <h2>Historial de Evaluaciones</h2>
-                            <button class="btn-refresh" (click)="loadEvaluations()">
-                                <i class="fas fa-sync-alt"></i> Actualizar
-                            </button>
+        <table *ngIf="evaluations.length > 0" class="evaluations-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Dispositivo</th>
+                    <th>Versión Android</th>
+                    <th>Archivos</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let eval of evaluations" [routerLink]="['/evaluaciones', eval.id]" class="table-row">
+                    <td><span class="id-badge">#{{ eval.id }}</span></td>
+                    <td>{{ eval.fecha_creacion | date:'medium' }}</td>
+                    <td>
+                        <div class="device-cell">
+                            <span class="device-name">{{ eval.dispositivo.marca }} {{ eval.dispositivo.modelo }}</span>
                         </div>
-
-                        <div *ngIf="loading" class="loading-state">
-                            <div class="spinner"></div>
-                            <p>Cargando evaluaciones...</p>
-                        </div>
-
-                        <div *ngIf="error" class="error-state">
-                            <p>{{ error }}</p>
-                            <button (click)="loadEvaluations()">Reintentar</button>
-                        </div>
-
-                        <div *ngIf="!loading && !error" class="evaluations-grid">
-                            <div *ngIf="evaluations.length === 0" class="empty-state">
-                                <p>No hay evaluaciones registradas.</p>
-                            </div>
-
-                            <div *ngFor="let eval of evaluations" class="evaluation-card"
-                                [routerLink]="['/evaluaciones', eval.id]">
-                                <div class="card-header">
-                                    <span class="date">{{ eval.fecha_creacion | date:'medium' }}</span>
-                                    <span class="id">#{{ eval.id }}</span>
-                                </div>
-                                <div class="card-body">
-                                    <div class="device-info">
-                                        <h3>{{ eval.dispositivo.marca }} {{ eval.dispositivo.modelo }}</h3>
-                                        <p>Android {{ eval.dispositivo.version_android }}</p>
-                                    </div>
-                                    <div class="stats">
-                                        <div class="stat-item">
-                                            <span class="label">Archivos</span>
-                                            <span class="value">{{ eval.cantidad_archivos }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-footer">
-                                    <button class="btn-pdf" (click)="$event.stopPropagation(); viewPdf(eval.id)">
-                                        <i class="fas fa-file-pdf"></i> Ver PDF
-                                    </button>
-                                    <span class="link-text">Ver Detalles <i class="fas fa-arrow-right"></i></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    </td>
+                    <td>Android {{ eval.dispositivo.version_android }}</td>
+                    <td>
+                        <span class="file-count">{{ eval.cantidad_archivos }} archivos</span>
+                    </td>
+                    <td class="actions-cell">
+                        <button class="btn-icon btn-pdf" (click)="$event.stopPropagation(); viewPdf(eval.id)"
+                            title="Ver PDF">
+                            PDF
+                            <i class="fas fa-file-pdf"></i>
+                        </button>
+                        <button class="btn-icon btn-view" [routerLink]="['/evaluaciones', eval.id]"
+                            title="Ver Detalles">Ver
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

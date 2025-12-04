@@ -82,16 +82,43 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Ruta del Archivo</th>
+                                <th>Nombre</th>
+                                <th>Tipo</th>
+                                <th>Tamaño</th>
+                                <th>Fecha</th>
+                                <th>Ruta</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let file of scanResult.archivos; let i = index">
-                                <td>{{ i + 1 }}</td>
-                                <td class="file-path">{{ file }}</td>
+                            <tr *ngFor="let file of paginatedFiles; let i = index">
+                                <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+                                <td class="font-medium">{{ file.nombre }}</td>
+                                <td><span class="badge">{{ file.tipo || 'N/A' }}</span></td>
+                                <td>{{ formatSize(file.tamano) }}</td>
+                                <td>{{ file.fecha }}</td>
+                                <td class="file-path" title="{{ file.ruta }}">{{ file.ruta }}</td>
                             </tr>
                         </tbody>
                     </table>
+
+                    <!-- Pagination Controls -->
+                    <div *ngIf="scanResult.archivos.length > 0" class="pagination-controls">
+                        <div class="pagination-info">
+                            Mostrando {{ (currentPage - 1) * itemsPerPage + 1 }} -
+                            {{ currentPage * itemsPerPage > scanResult.archivos.length ? scanResult.archivos.length :
+                            currentPage * itemsPerPage }}
+                            de {{ scanResult.archivos.length }}
+                        </div>
+                        <div class="pagination-buttons">
+                            <button class="btn-page" (click)="prevPage()" [disabled]="currentPage === 1">
+                                <i class="fas fa-chevron-left"></i> Anterior
+                            </button>
+                            <span class="page-number">Página {{ currentPage }} de {{ totalPages }}</span>
+                            <button class="btn-page" (click)="nextPage()" [disabled]="currentPage === totalPages">
+                                Siguiente <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

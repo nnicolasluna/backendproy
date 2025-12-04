@@ -16,10 +16,18 @@ export interface ExtractOptions {
     carpeta_destino?: string;
 }
 
+export interface ScanFile {
+    ruta: string;
+    nombre: string;
+    tamano: number;
+    fecha: string;
+    tipo: string;
+}
+
 export interface ScanResult {
     total_archivos: number;
     resumen_categorias: { [key: string]: number };
-    archivos: string[];
+    archivos: ScanFile[];
 }
 
 export interface ExtractResult {

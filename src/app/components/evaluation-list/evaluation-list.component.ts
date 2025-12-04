@@ -16,6 +16,10 @@ export class EvaluationListComponent implements OnInit {
     loading = true;
     error: string | null = null;
 
+    // Pagination
+    currentPage = 1;
+    itemsPerPage = 10;
+
     constructor(private apiService: ApiService) { }
 
     ngOnInit() {
@@ -28,6 +32,7 @@ export class EvaluationListComponent implements OnInit {
             next: (response) => {
                 if (response.success && response.data) {
                     this.evaluations = response.data;
+                    this.currentPage = 1; // Reset to first page on reload
                 } else {
                     this.error = response.error || 'Error al cargar evaluaciones';
                 }
@@ -40,6 +45,28 @@ export class EvaluationListComponent implements OnInit {
             }
         });
     }
+
+    get paginatedEvaluations(): Evaluacion[] {
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        return this.evaluations.slice(startIndex, startIndex + this.itemsPerPage);
+    }
+
+    get totalPages(): number {
+        return Math.ceil(this.evaluations.length / this.itemsPerPage);
+    }
+
+    nextPage() {
+        if (this.currentPage < this.totalPages) {
+            this.currentPage++;
+        }
+    }
+
+    prevPage() {
+        if (this.currentPage > 1) {
+            this.currentPage--;
+        }
+    }
+
     viewPdf(id: number) {
         this.apiService.getEvaluationPdf(id).subscribe({
             next: (blob) => {
