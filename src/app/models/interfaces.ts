@@ -91,3 +91,24 @@ export interface ExtractCallsResult {
     llamadas_extraidas: number;
     llamadas: Llamada[];
 }
+
+export interface WhatsAppBackup {
+    ruta: string;
+    nombre: string;
+    tamano: number;
+    fecha: string;
+    tipo_backup: string;
+    app_origen: string;
+    ruta_local?: string;
+}
+
+export interface ExtractWhatsAppBackupsResult {
+    evaluacion: Evaluacion;
+    backups: {
+        backups_encontrados: WhatsAppBackup[];
+        backups_descargados: number;
+        backups_fallidos: number;
+        carpeta_destino: string | null;
+    };
+    archivos_procesados: number;
+}

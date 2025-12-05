@@ -22,8 +22,24 @@
             </div>
         </div>
 
-        <!-- Category Selection (hidden when extractOnlyCalls is true) -->
-        <div class="section" *ngIf="!extractOnlyCalls">
+        <!-- Extract WhatsApp Backups Toggle -->
+        <div class="section">
+            <div class="toggle-container" (click)="toggleExtractWhatsAppBackups()">
+                <div class="toggle-switch whatsapp-toggle" [class.active]="extractWhatsAppBackups">
+                    <div class="toggle-slider"></div>
+                </div>
+                <div class="toggle-info">
+                    <span class="toggle-label">Extraer Backups de WhatsApp</span>
+                    <span class="toggle-hint">Extrae las bases de datos de respaldo de WhatsApp y WhatsApp
+                        Business</span>
+                </div>
+                <span class="material-icons toggle-icon"
+                    [style.color]="extractWhatsAppBackups ? '#25D366' : '#6b7280'">chat</span>
+            </div>
+        </div>
+
+        <!-- Category Selection (hidden when extractOnlyCalls or extractWhatsAppBackups is true) -->
+        <div class="section" *ngIf="!extractOnlyCalls && !extractWhatsAppBackups">
             <label class="section-label">Selecciona las categorías a extraer:</label>
             <div class="categories-grid">
                 <div *ngFor="let category of categories" class="chip category-chip"
@@ -35,8 +51,8 @@
             </div>
         </div>
 
-        <!-- Destination Folder (hidden when extractOnlyCalls is true) -->
-        <div class="section" *ngIf="!extractOnlyCalls">
+        <!-- Destination Folder (hidden when extractOnlyCalls or extractWhatsAppBackups is true) -->
+        <div class="section" *ngIf="!extractOnlyCalls && !extractWhatsAppBackups">
             <label class="input-label">Carpeta de destino:</label>
             <input type="text" class="input" [(ngModel)]="destinationFolder" placeholder="archivos_descargados">
             <p class="input-hint">
@@ -45,19 +61,17 @@
             </p>
         </div>
 
-        <!-- Custom Path (hidden when extractOnlyCalls is true) -->
-        <div class="section" *ngIf="!extractOnlyCalls">
+        <!-- Custom Path (hidden when extractOnlyCalls or extractWhatsAppBackups is true) -->
+        <div class="section" *ngIf="!extractOnlyCalls && !extractWhatsAppBackups">
             <label class="input-label">Ruta personalizada (opcional):</label>
             <input type="text" class="input" [(ngModel)]="customPath" placeholder="/storage/emulated/0/DCIM/">
         </div>
 
         <!-- Extract Button -->
         <button class="btn btn-success extract-btn" (click)="extract()" [disabled]="loading || !canExtract()"
-            [class.btn-calls-mode]="extractOnlyCalls">
-            <span class="material-icons">{{ loading ? 'downloading' : (extractOnlyCalls ? 'phone' : 'download')
-                }}</span>
-            {{ loading ? (extractOnlyCalls ? 'Extrayendo Llamadas...' : 'Extrayendo...') : (extractOnlyCalls ? 'Extraer
-            Llamadas' : 'Iniciar Extracción') }}
+            [class.btn-calls-mode]="extractOnlyCalls" [class.btn-whatsapp-mode]="extractWhatsAppBackups">
+            <span class="material-icons">{{ getExtractButtonIcon() }}</span>
+            {{ getExtractButtonText() }}
         </button>
 
         <!-- Progress Bar -->
@@ -192,6 +206,116 @@
                 [routerLink]="['/evaluaciones', extractCallsResult.evaluacion.id, 'llamadas']">
                 <span class="material-icons">visibility</span>
                 Ver Llamadas Extraídas
+            </a>
+        </div>
+    </div>
+
+    <!-- Results for WhatsApp Backups -->
+    <div *ngIf="extractWhatsAppResult" class="results-container">
+        <div class="card success-card whatsapp-result-card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <span class="material-icons">check_circle</span>
+                    Backups de WhatsApp Extraídos
+                </h3>
+            </div>
+
+            <!-- WhatsApp Summary -->
+            <div class="whatsapp-summary">
+                <div class="whatsapp-icon-container">
+                    <span class="material-icons">chat</span>
+                </div>
+                <div class="whatsapp-count">{{ extractWhatsAppResult.backups.backups_descargados }}</div>
+                <p class="whatsapp-label">Backups descargados</p>
+            </div>
+
+            <!-- Success Rate -->
+            <div class="success-rate" *ngIf="extractWhatsAppResult.backups.backups_encontrados.length > 0">
+                <div class="circular-progress whatsapp-progress" [style.--progress]="getWhatsAppSuccessRate()">
+                    <svg width="100" height="100">
+                        <circle cx="50" cy="50" r="45" class="bg-circle"></circle>
+                        <circle cx="50" cy="50" r="45" class="progress-circle whatsapp-progress-circle"
+                            [style.stroke-dashoffset]="282.743 - (282.743 * getWhatsAppSuccessRate() / 100)"></circle>
+                    </svg>
+                    <div class="progress-value">{{ getWhatsAppSuccessRate() }}%</div>
+                </div>
+                <p class="success-text">Tasa de Éxito</p>
+            </div>
+
+            <!-- Statistics Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="material-icons stat-icon" style="color: #25D366;">search</span>
+                    <div>
+                        <p class="stat-label">Encontrados</p>
+                        <p class="stat-value">{{ extractWhatsAppResult.backups.backups_encontrados.length }}</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <span class="material-icons stat-icon" style="color: #10b981;">download_done</span>
+                    <div>
+                        <p class="stat-label">Descargados</p>
+                        <p class="stat-value">{{ extractWhatsAppResult.backups.backups_descargados }}</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <span class="material-icons stat-icon" style="color: #ef4444;">error</span>
+                    <div>
+                        <p class="stat-label">Fallidos</p>
+                        <p class="stat-value">{{ extractWhatsAppResult.backups.backups_fallidos }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Backups List -->
+            <div class="backups-list" *ngIf="extractWhatsAppResult.backups.backups_encontrados.length > 0">
+                <h4 class="breakdown-title">Backups Encontrados:</h4>
+                <div class="backup-items">
+                    <div *ngFor="let backup of extractWhatsAppResult.backups.backups_encontrados" class="backup-item">
+                        <div class="backup-icon" [class.whatsapp-business]="backup.app_origen === 'WhatsApp Business'">
+                            <span class="material-icons">{{ backup.app_origen === 'WhatsApp Business' ? 'business' :
+                                'chat' }}</span>
+                        </div>
+                        <div class="backup-info">
+                            <p class="backup-name">{{ backup.nombre }}</p>
+                            <p class="backup-meta">
+                                <span class="backup-type">{{ backup.tipo_backup }}</span>
+                                <span class="backup-separator">•</span>
+                                <span class="backup-size">{{ formatFileSize(backup.tamano) }}</span>
+                                <span class="backup-separator">•</span>
+                                <span class="backup-app">{{ backup.app_origen }}</span>
+                            </p>
+                        </div>
+                        <span class="material-icons backup-status" *ngIf="backup.ruta_local"
+                            style="color: #10b981;">check_circle</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Destination Info -->
+            <div class="destination-info" *ngIf="extractWhatsAppResult.backups.carpeta_destino">
+                <span class="material-icons">folder_open</span>
+                <div>
+                    <p class="destination-label">Ubicación:</p>
+                    <p class="destination-path">{{ extractWhatsAppResult.backups.carpeta_destino }}</p>
+                </div>
+            </div>
+
+            <!-- Evaluation Info -->
+            <div class="evaluation-info">
+                <span class="material-icons">assignment</span>
+                <div>
+                    <p class="evaluation-label">Evaluación creada:</p>
+                    <p class="evaluation-id">#{{ extractWhatsAppResult.evaluacion.id }}</p>
+                </div>
+            </div>
+
+            <!-- View Evaluation Button -->
+            <a class="btn btn-view-whatsapp" [routerLink]="['/evaluaciones', extractWhatsAppResult.evaluacion.id]">
+                <span class="material-icons">visibility</span>
+                Ver Evaluación Completa
             </a>
         </div>
     </div>

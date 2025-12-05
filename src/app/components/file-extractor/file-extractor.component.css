@@ -442,3 +442,235 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
 }
+
+/* WhatsApp Toggle Styles */
+.toggle-switch.whatsapp-toggle.active {
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+}
+
+/* Button WhatsApp mode */
+.btn-whatsapp-mode {
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%) !important;
+}
+
+.btn-whatsapp-mode:hover {
+    background: linear-gradient(135deg, #1ebe57 0%, #0d7d6e 100%) !important;
+}
+
+/* WhatsApp Result Card */
+.whatsapp-result-card {
+    background: linear-gradient(135deg, rgba(37, 211, 102, 0.1) 0%, rgba(18, 140, 126, 0.05) 100%) !important;
+}
+
+.whatsapp-summary {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.whatsapp-icon-container {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+    background: linear-gradient(135deg, rgba(37, 211, 102, 0.2) 0%, rgba(18, 140, 126, 0.1) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.whatsapp-icon-container .material-icons {
+    font-size: 2.5rem;
+    color: #25D366;
+}
+
+.whatsapp-count {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #25D366;
+    line-height: 1;
+}
+
+.whatsapp-label {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+}
+
+/* WhatsApp Progress Circle */
+.whatsapp-progress .progress-value {
+    color: #25D366;
+}
+
+.whatsapp-progress-circle {
+    stroke: #25D366 !important;
+    stroke-dasharray: 282.743;
+}
+
+/* Backups List */
+.backups-list {
+    margin-bottom: 1.5rem;
+}
+
+.backup-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.backup-items::-webkit-scrollbar {
+    width: 6px;
+}
+
+.backup-items::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+}
+
+.backup-items::-webkit-scrollbar-thumb {
+    background: rgba(37, 211, 102, 0.3);
+    border-radius: 3px;
+}
+
+.backup-items::-webkit-scrollbar-thumb:hover {
+    background: rgba(37, 211, 102, 0.5);
+}
+
+.backup-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    transition: all 0.3s ease;
+}
+
+.backup-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(37, 211, 102, 0.3);
+    transform: translateX(4px);
+}
+
+.backup-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(37, 211, 102, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.backup-icon .material-icons {
+    font-size: 1.25rem;
+    color: #25D366;
+}
+
+.backup-icon.whatsapp-business {
+    background: rgba(0, 168, 132, 0.15);
+}
+
+.backup-icon.whatsapp-business .material-icons {
+    color: #00A884;
+}
+
+.backup-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.backup-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.backup-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin: 0.25rem 0 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.backup-type {
+    color: #25D366;
+    font-weight: 500;
+}
+
+.backup-separator {
+    color: var(--text-muted);
+    opacity: 0.5;
+}
+
+.backup-size {
+    color: var(--text-secondary);
+}
+
+.backup-app {
+    color: var(--accent);
+}
+
+.backup-status {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+/* View WhatsApp Button */
+.btn-view-whatsapp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+    border: none;
+    border-radius: var(--radius-md);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.btn-view-whatsapp:hover {
+    background: linear-gradient(135deg, #1ebe57 0%, #0d7d6e 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+}
+
+/* WhatsApp specific info cards */
+.whatsapp-result-card .evaluation-info .material-icons,
+.whatsapp-result-card .device-info-card .material-icons {
+    color: #25D366;
+}
+
+.whatsapp-result-card .evaluation-id {
+    color: #25D366;
+}
+
+.whatsapp-result-card .destination-info {
+    background: rgba(37, 211, 102, 0.1);
+    border-color: rgba(37, 211, 102, 0.2);
+}
+
+.whatsapp-result-card .destination-info .material-icons {
+    color: #25D366;
+}
+
+.whatsapp-result-card .destination-path {
+    color: #25D366;
+}

@@ -11,6 +11,7 @@ import {
     HealthCheck,
     Evaluacion,
     ExtractCallsResult,
+    ExtractWhatsAppBackupsResult,
     Llamada
 } from '../models/interfaces';
 
@@ -40,6 +41,10 @@ export class ApiService {
 
     extractCalls(metadata: any = {}): Observable<ApiResponse<ExtractCallsResult>> {
         return this.http.post<ApiResponse<ExtractCallsResult>>(`${this.baseUrl}/extract-calls`, { metadata });
+    }
+
+    extractWhatsAppBackups(metadata: any = {}): Observable<ApiResponse<ExtractWhatsAppBackupsResult>> {
+        return this.http.post<ApiResponse<ExtractWhatsAppBackupsResult>>(`${this.baseUrl}/extract-whatsapp-backups`, { metadata });
     }
 
     getEvaluations(): Observable<ApiResponse<Evaluacion[]>> {

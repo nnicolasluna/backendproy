@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
-import { Category, ExtractResult, ExtractCallsResult } from '../../models/interfaces';
+import { Category, ExtractResult, ExtractCallsResult, ExtractWhatsAppBackupsResult } from '../../models/interfaces';
 
 @Component({
     selector: 'app-file-extractor',
@@ -27,11 +27,13 @@ export class FileExtractorComponent {
     loading = false;
     extractResult: ExtractResult | null = null;
     extractCallsResult: ExtractCallsResult | null = null;
+    extractWhatsAppResult: ExtractWhatsAppBackupsResult | null = null;
     error: string | null = null;
     progress = 0;
 
-    // Opción para extraer solo llamadas
+    // Opciones de extracción especial
     extractOnlyCalls = false;
+    extractWhatsAppBackups = false;
 
     constructor(private apiService: ApiService) { }
 
@@ -51,8 +53,18 @@ export class FileExtractorComponent {
     toggleExtractOnlyCalls() {
         this.extractOnlyCalls = !this.extractOnlyCalls;
         if (this.extractOnlyCalls) {
-            // Limpiar selecciones de categorías al activar solo llamadas
+            // Limpiar otras selecciones
             this.selectedCategories = [];
+            this.extractWhatsAppBackups = false;
+        }
+    }
+
+    toggleExtractWhatsAppBackups() {
+        this.extractWhatsAppBackups = !this.extractWhatsAppBackups;
+        if (this.extractWhatsAppBackups) {
+            // Limpiar otras selecciones
+            this.selectedCategories = [];
+            this.extractOnlyCalls = false;
         }
     }
 
@@ -60,6 +72,12 @@ export class FileExtractorComponent {
         // Si es solo llamadas, ejecutar extracción de llamadas
         if (this.extractOnlyCalls) {
             this.extractCalls();
+            return;
+        }
+
+        // Si es backups de WhatsApp, ejecutar esa extracción
+        if (this.extractWhatsAppBackups) {
+            this.extractWhatsApp();
             return;
         }
 
@@ -71,6 +89,7 @@ export class FileExtractorComponent {
         this.error = null;
         this.extractResult = null;
         this.extractCallsResult = null;
+        this.extractWhatsAppResult = null;
         this.progress = 0;
 
         // Simulate progress (real progress would require WebSocket from backend)
@@ -118,6 +137,7 @@ export class FileExtractorComponent {
         this.error = null;
         this.extractResult = null;
         this.extractCallsResult = null;
+        this.extractWhatsAppResult = null;
         this.progress = 0;
 
         const progressInterval = setInterval(() => {
@@ -142,6 +162,42 @@ export class FileExtractorComponent {
             error: (error) => {
                 clearInterval(progressInterval);
                 this.error = 'Error al extraer llamadas. Verifica la conexión con el dispositivo.';
+                this.loading = false;
+                this.progress = 0;
+            }
+        });
+    }
+
+    extractWhatsApp() {
+        this.loading = true;
+        this.error = null;
+        this.extractResult = null;
+        this.extractCallsResult = null;
+        this.extractWhatsAppResult = null;
+        this.progress = 0;
+
+        const progressInterval = setInterval(() => {
+            if (this.progress < 90) {
+                this.progress += 10;
+            }
+        }, 400);
+
+        this.apiService.extractWhatsAppBackups().subscribe({
+            next: (response) => {
+                clearInterval(progressInterval);
+                this.progress = 100;
+
+                if (response.success && response.data) {
+                    this.extractWhatsAppResult = response.data;
+                }
+
+                setTimeout(() => {
+                    this.loading = false;
+                }, 500);
+            },
+            error: (error) => {
+                clearInterval(progressInterval);
+                this.error = 'Error al extraer backups de WhatsApp. Verifica la conexión con el dispositivo.';
                 this.loading = false;
                 this.progress = 0;
             }
@@ -174,9 +230,45 @@ export class FileExtractorComponent {
         return Math.round((this.extractResult.archivos_descargados / this.extractResult.archivos_escaneados) * 100);
     }
 
+    getWhatsAppSuccessRate(): number {
+        if (!this.extractWhatsAppResult || !this.extractWhatsAppResult.backups) return 0;
+        const backups = this.extractWhatsAppResult.backups;
+        const total = backups.backups_encontrados.length;
+        if (total === 0) return 0;
+        return Math.round((backups.backups_descargados / total) * 100);
+    }
+
+    formatFileSize(bytes: number): string {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
     canExtract(): boolean {
         if (this.extractOnlyCalls) return true;
+        if (this.extractWhatsAppBackups) return true;
         return this.selectedCategories.length > 0 || !!this.customPath;
     }
+
+    getExtractButtonText(): string {
+        if (this.loading) {
+            if (this.extractOnlyCalls) return 'Extrayendo Llamadas...';
+            if (this.extractWhatsAppBackups) return 'Extrayendo Backups WhatsApp...';
+            return 'Extrayendo...';
+        }
+        if (this.extractOnlyCalls) return 'Extraer Llamadas';
+        if (this.extractWhatsAppBackups) return 'Extraer Backups WhatsApp';
+        return 'Iniciar Extracción';
+    }
+
+    getExtractButtonIcon(): string {
+        if (this.loading) return 'downloading';
+        if (this.extractOnlyCalls) return 'phone';
+        if (this.extractWhatsAppBackups) return 'chat';
+        return 'download';
+    }
 }
+
 
