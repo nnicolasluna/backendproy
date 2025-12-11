@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { AuthService } from './services/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +10,7 @@ import { RouterModule } from '@angular/router';
   imports: [CommonModule, RouterModule],
   template: `
     <div class="app-container">
-      <nav class="navbar">
+      <nav class="navbar" *ngIf="isAuthenticated$ | async">
         <div class="logo">
           <i class="fas fa-mobile-alt"></i> Android Extractor
         </div>
@@ -19,6 +21,12 @@ import { RouterModule } from '@angular/router';
           <a routerLink="/evaluaciones" routerLinkActive="active">
             <i class="fas fa-list"></i> Evaluaciones
           </a>
+          <a routerLink="/usuarios" routerLinkActive="active">
+            <i class="fas fa-users"></i> Usuarios
+          </a>
+          <button class="btn-logout" (click)="logout()">
+            <i class="fas fa-sign-out-alt"></i> Salir
+          </button>
         </div>
       </nav>
       
@@ -54,12 +62,13 @@ import { RouterModule } from '@angular/router';
     }
 
     .logo i {
-      color: #4CAF50;
+      color: #3b82f6;
     }
 
     .nav-links {
       display: flex;
       gap: 1.5rem;
+      align-items: center;
     }
 
     .nav-links a {
@@ -79,9 +88,25 @@ import { RouterModule } from '@angular/router';
     }
 
     .nav-links a.active {
-      color: white;
-      background: rgba(33, 150, 243, 0.2);
-      color: #2196F3;
+      background: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+    }
+
+    .btn-logout {
+      background: rgba(239, 68, 68, 0.1);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover {
+      background: rgba(239, 68, 68, 0.2);
     }
 
     .content {
@@ -98,6 +123,17 @@ import { RouterModule } from '@angular/router';
     }
   `]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'Android File Extractor';
+  isAuthenticated$!: Observable<boolean>;
+
+  constructor(private authService: AuthService) { }
+
+  ngOnInit() {
+    this.isAuthenticated$ = this.authService.isAuthenticated$;
+  }
+
+  logout() {
+    this.authService.logout();
+  }
 }

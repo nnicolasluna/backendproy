@@ -23,6 +23,27 @@ export class ApiService {
 
     constructor(private http: HttpClient) { }
 
+    // User Management
+    getUsers(): Observable<ApiResponse<any[]>> {
+        return this.http.get<ApiResponse<any[]>>(`${this.baseUrl}/users`);
+    }
+
+    getUser(id: number): Observable<ApiResponse<any>> {
+        return this.http.get<ApiResponse<any>>(`${this.baseUrl}/users/${id}`);
+    }
+
+    createUser(userData: any): Observable<ApiResponse<any>> {
+        return this.http.post<ApiResponse<any>>(`${this.baseUrl}/users`, userData);
+    }
+
+    updateUser(id: number, userData: any): Observable<ApiResponse<any>> {
+        return this.http.put<ApiResponse<any>>(`${this.baseUrl}/users/${id}`, userData);
+    }
+
+    deleteUser(id: number): Observable<ApiResponse<any>> {
+        return this.http.delete<ApiResponse<any>>(`${this.baseUrl}/users/${id}`);
+    }
+
     healthCheck(): Observable<HealthCheck> {
         return this.http.get<HealthCheck>(`${this.baseUrl}/health`);
     }

@@ -1,0 +1,60 @@
+<div class="user-list-container">
+    <div class="header-actions">
+        <h2>Gestión de Usuarios</h2>
+        <a routerLink="/usuarios/nuevo" class="btn-primary">
+            <i class="fas fa-plus"></i> Nuevo Usuario
+        </a>
+    </div>
+
+    <div class="card-list">
+        <div *ngIf="loading" class="loading-state">
+            <div class="spinner"></div>
+            <p>Cargando usuarios...</p>
+        </div>
+
+        <div *ngIf="error" class="error-message">
+            {{ error }}
+        </div>
+
+        <div *ngIf="!loading && !error" class="table-responsive">
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Email</th>
+                        <th>Nombre Completo</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of users">
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.nombre_completo || '-' }}</td>
+                        <td>
+                            <span class="badge badge-admin" *ngIf="user.es_admin">Admin</span>
+                            <span class="badge badge-user" *ngIf="!user.es_admin">Usuario</span>
+                        </td>
+                        <td>
+                            <span class="status-dot" [class.active]="user.activo"></span>
+                            {{ user.activo ? 'Activo' : 'Inactivo' }}
+                        </td>
+                        <td class="actions">
+                            <a [routerLink]="['/usuarios', user.id, 'editar']" class="btn-icon" title="Editar">
+                                ✏️
+                            </a>
+                            <button (click)="deleteUser(user)" class="btn-icon btn-delete" title="Eliminar"
+                                [disabled]="user.id === currentUser?.id">
+                                🗑️
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

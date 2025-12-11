@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
+import { AuthService } from '../../services/auth.service';
 import { Evaluacion, Archivo } from '../../models/interfaces';
 
 @Component({
@@ -22,7 +23,8 @@ export class EvaluationDetailComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private apiService: ApiService
+        private apiService: ApiService,
+        private authService: AuthService
     ) { }
 
     ngOnInit() {
@@ -74,7 +76,9 @@ export class EvaluationDetailComponent implements OnInit {
     }
 
     getFileUrl(fileId: number): string {
-        return this.apiService.getFileUrl(fileId);
+        const url = this.apiService.getFileUrl(fileId);
+        const token = this.authService.getToken();
+        return token ? `${url}?jwt=${token}` : url;
     }
 
     getFileType(file: Archivo): 'image' | 'audio' | 'video' | 'document' | 'other' {

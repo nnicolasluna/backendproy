@@ -1,0 +1,78 @@
+<div class="user-form-container">
+    <div class="form-card">
+        <div class="form-header">
+            <h2>{{ isEditMode ? 'Editar Usuario' : 'Nuevo Usuario' }}</h2>
+            <button routerLink="/usuarios" class="btn-close">✕</button>
+        </div>
+
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+            <div class="form-error" *ngIf="error">
+                {{ error }}
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="username">Nombre de Usuario</label>
+                    <input type="text" id="username" formControlName="username" class="form-control"
+                        [class.invalid]="submitted && userForm.get('username')?.invalid">
+                    <div class="invalid-feedback" *ngIf="submitted && userForm.get('username')?.errors?.['required']">
+                        El usuario es requerido
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Coral Electrónico</label>
+                    <input type="email" id="email" formControlName="email" class="form-control"
+                        [class.invalid]="submitted && userForm.get('email')?.invalid">
+                    <div class="invalid-feedback" *ngIf="submitted && userForm.get('email')?.errors?.['required']">
+                        El email es requerido
+                    </div>
+                    <div class="invalid-feedback" *ngIf="submitted && userForm.get('email')?.errors?.['email']">
+                        Email inválido
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="nombre_completo">Nombre Completo</label>
+                    <input type="text" id="nombre_completo" formControlName="nombre_completo" class="form-control"
+                        [class.invalid]="submitted && userForm.get('nombre_completo')?.invalid">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="password">{{ isEditMode ? 'Contraseña (dejar en blanco para mantener)' : 'Contraseña'
+                        }}</label>
+                    <input type="password" id="password" formControlName="password" class="form-control"
+                        [class.invalid]="submitted && userForm.get('password')?.invalid">
+                    <div class="invalid-feedback" *ngIf="submitted && userForm.get('password')?.errors?.['required']">
+                        La contraseña es requerida
+                    </div>
+                    <div class="invalid-feedback" *ngIf="submitted && userForm.get('password')?.errors?.['minlength']">
+                        Mínimo 6 caracteres
+                    </div>
+                </div>
+            </div>
+
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" formControlName="es_admin">
+                    <span class="checkmark"></span>
+                    Es Administrador
+                </label>
+
+                <label class="checkbox-label" *ngIf="isEditMode">
+                    <input type="checkbox" formControlName="activo">
+                    <span class="checkmark"></span>
+                    Usuario Activo
+                </label>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" routerLink="/usuarios" class="btn-secondary">Cancelar</button>
+                <button type="submit" class="btn-primary" [disabled]="loading">
+                    <span *ngIf="loading" class="spinner-sm"></span>
+                    {{ isEditMode ? 'Actualizar' : 'Crear Usuario' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
